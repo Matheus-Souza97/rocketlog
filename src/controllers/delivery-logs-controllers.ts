@@ -12,15 +12,19 @@ class DeliveryLogsController {
 
     const { delivery_id, description } = bodySchema.parse(request.body)
 
-    const delivey = await prisma.delivery.findUnique({
+    const delivery = await prisma.delivery.findUnique({
       where: { id: delivery_id}
     })
 
-    if(!delivey){
+    if(!delivery){
       throw new AppError("Delivery not found", 404)
     }
 
-    if(delivey.status === "processing"){
+    if(delivery.status === "delivered"){
+      throw new AppError("this oroder has already been delivered")
+    }
+
+    if(delivery.status === "processing"){
       throw new AppError("Change status to shipped", 404)
     }
 
@@ -42,7 +46,11 @@ class DeliveryLogsController {
     const { delivery_id} = paramsSchema.parse(request.params)
 
     const delivery = await prisma.delivery.findUnique({
-      where: { id: delivery_id }
+      where: { id: delivery_id },
+      include: {
+        deliveryLogs: {select: {description: true, id: true}},
+        user: {select: {name: true, email: true}}
+      }
     })
 
     if( request.user?.role === "customer" && request.user.id !== delivery?.userId){
