@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
+import { prisma } from "@/database/prisma";
 import { z } from "zod"
+import { AppError } from "@/utils/AppError";
 
 class DeliveryLogsController {
   async create(request: Request, response:Response){
@@ -7,7 +9,29 @@ class DeliveryLogsController {
       delivery_id: z.string().uuid(),
       description: z.string()
     })
-    return response.json({message: "ok"})
+
+    const { delivery_id, description } = bodySchema.parse(request.body)
+
+    const delivey = await prisma.delivery.findUnique({
+      where: { id: delivery_id}
+    })
+
+    if(!delivey){
+      throw new AppError("Delivery not found", 404)
+    }
+
+    if(delivey.status === "processing"){
+      throw new AppError("Change status to shipped", 404)
+    }
+
+    await prisma.deliveryLog.create({
+      data: {
+        deliveryId: delivery_id,
+        description
+      }
+    })
+
+    return response.status(201).json()
   }
 }
 
