@@ -8,6 +8,8 @@
       "@/*": ["./src/*"]
     },
 
+    "types": ["jest"],
+
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
