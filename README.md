@@ -48,6 +48,24 @@ src/
  └── server.ts
 ```
 
+## 📸 Preview
+
+<p align="left">
+  <img alt="" src="./create.png" width="50%">
+</p>
+
+<p align="left">
+  <img alt="" src="./login.png" width="50%">
+</p>
+
+<p align="left">
+  <img alt="" src="./statusUpdate.png" width="50%">
+</p>
+
+<p align="left">
+  <img alt="" src="./status.png" width="50%">
+</p>
+
 ## ⚙️ Como rodar o projeto
 
 1. Clone o repositório
